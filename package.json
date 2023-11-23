@@ -1,0 +1,17 @@
+{
+  "name": "macbert",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^4.13.0",
+    "@xenova/transformers": "^2.9.0",
+    "onnxruntime-node": "^1.16.3"
+  }
+}
