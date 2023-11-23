@@ -37,7 +37,9 @@ GET <http://127.0.0.1:3000/checking?text={文本}>
 ## documents
 
 <https://huggingface.co/docs/huggingface_hub/main/guides/cli>
+
 <https://huggingface.co/shibing624/macbert4csc-base-chinese>
+
 <https://huggingface.co/docs/transformers.js/index>
 
 
