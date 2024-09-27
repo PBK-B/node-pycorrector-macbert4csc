@@ -37,21 +37,34 @@ class MyClassificationPipeline {
 
     static async get_errors(origin, corrected) {
         const errors = []
+        const compact = corrected.replaceAll(' ', '')
+        const target = origin // 对比目标
+        let restored = compact // 对比结论
         let i = 0
-        for await (const char of corrected) {
-            if (i >= origin.length) {
+        for await (const char of target) {
+            if (i >= target.length) {
                 break
-            } else if (char != origin[i]) {
-                errors.push({
-                    index: i,
-                    wrong: `${origin[i]}`,
-                    correct: `${char}`
-                })
+            } else if (char == " ") {
+                restored = restored.slice(0, i) + " " + restored.slice(i)
+            } else if (char != restored[i]) {
+                if (char?.toLowerCase() == restored[i]?.toLowerCase()) {
+                    // 大小写还原
+                    const chars = restored.split('')
+                    chars[i] = char
+                    restored = chars.join('')
+                } else {
+                    // 为纠错字符
+                    errors.push({
+                        index: i + 1, // 直觉上来说 index 应该从 1 开始
+                        wrong: `${char}`,
+                        correct: `${restored[i]}`
+                    })
+                }
             }
-            // console.log(i, origin[i], '=>', char);
+            // console.log(i, char, '=>', restored[i]);
             i += 1
         }
-        return errors
+        return [restored, errors]
     }
 
     // 纠错
@@ -70,10 +83,10 @@ class MyClassificationPipeline {
             skip_special_tokens: true
         })
 
-        const corrected = _text.replaceAll(' ', '')
-        const errors = await MyClassificationPipeline.get_errors(text, corrected)
+        // const corrected = _text.replaceAll(' ', '')
+        const [outText, errors] = await MyClassificationPipeline.get_errors(text, _text)
 
-        return [corrected, errors]
+        return [outText, errors]
     }
 
     static async getInstance(progress_callback = null) {
